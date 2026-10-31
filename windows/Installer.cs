@@ -15,7 +15,7 @@ using Microsoft.Win32;
 
 [assembly: AssemblyTitle("Local Code Compiler Setup")]
 [assembly: AssemblyDescription("Offline Windows app installer")]
-[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.2.0.0")]
 
 internal sealed class InstallationRecord
 {
@@ -31,7 +31,7 @@ internal static class Setup
 {
     internal const string AppName = "Local Code Compiler";
     internal const string AppId = "LocalCodeCompiler";
-    internal const string Version = "1.1.0";
+    internal const string Version = "1.2.0";
     internal const string ExeName = "Local Code Compiler.exe";
     internal const string RegistryPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\LocalCodeCompiler";
     internal static string SourceHome = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

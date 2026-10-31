@@ -19,7 +19,7 @@ using Microsoft.Web.WebView2.WinForms;
 [assembly: AssemblyDescription("Offline local code editor, compiler and live preview")]
 [assembly: AssemblyCompany("Local Tools")]
 [assembly: AssemblyProduct("Local Code Compiler")]
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.2.0.0")]
 
 internal static class Program
 {
@@ -155,6 +155,7 @@ internal sealed class CompilerWindow : Form
             CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(null, Path.Combine(dataFolder, "webview"));
             await browser.EnsureCoreWebView2Async(environment);
             browser.CoreWebView2.Settings.IsStatusBarEnabled = false;
+            browser.CoreWebView2.Settings.IsZoomControlEnabled = false;
             browser.CoreWebView2.Settings.AreDefaultContextMenusEnabled = true;
             browser.CoreWebView2.WebMessageReceived += delegate(object s, CoreWebView2WebMessageReceivedEventArgs e)
             {

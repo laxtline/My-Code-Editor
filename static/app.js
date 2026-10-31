@@ -30,6 +30,8 @@ for(const [icon,name,path] of languages){
 }
 let activeRun=null, cursor=0, generation=0, outputText='', traceSteps=[], traceIndex=0, traceTimer=null, highlighted=null;
 let fontSize=Math.min(24,Math.max(11,Number(storage.get('font','14'))||14));
+const defaultOutputFontSize=14;
+let outputFontSize=defaultOutputFontSize;
 let currentMode='run';
 const editor=CodeMirror.fromTextArea($('source'),{
   mode:{name:'python',version:3},lineNumbers:true,indentUnit:4,tabSize:4,indentWithTabs:false,
@@ -49,8 +51,25 @@ editor.on('change',()=>{
   $('share').disabled=!editor.getValue().trim();clearHighlight();
   if(currentLanguage==='html'){clearTimeout(previewTimer);previewTimer=setTimeout(updatePreview,350);}
 });
-function setFont(size){fontSize=Math.min(24,Math.max(11,size));editor.getWrapperElement().style.fontSize=fontSize+'px';$('terminal').style.fontSize=fontSize+'px';$('font-size').textContent=fontSize;storage.set('font',fontSize);editor.refresh();}
+function setFont(size){fontSize=Math.min(24,Math.max(11,size));editor.getWrapperElement().style.fontSize=fontSize+'px';$('font-size').textContent=fontSize;storage.set('font',fontSize);editor.refresh();}
+function setOutputFont(size){
+  outputFontSize=Math.min(48,Math.max(8,Number(size)||defaultOutputFontSize));
+  document.querySelector('.output-pane').style.setProperty('--output-font-size',outputFontSize+'px');
+  storage.set('output-font',outputFontSize);
+}
 setFont(fontSize);
+setOutputFont(storage.get('output-font',String(defaultOutputFontSize)));
+// Handle zoom before browser shortcuts, and only while focus is in Output.
+document.addEventListener('keydown',event=>{
+  if(!(event.ctrlKey||event.metaKey)||event.altKey)return;
+  if(!document.querySelector('.output-pane').contains(document.activeElement))return;
+  let size;
+  if(event.key==='='||event.key==='+'||event.code==='NumpadAdd')size=outputFontSize+2;
+  else if(event.key==='-'||event.code==='NumpadSubtract')size=outputFontSize-2;
+  else if(event.key==='0'||event.code==='Numpad0')size=defaultOutputFontSize;
+  else return;
+  event.preventDefault();event.stopImmediatePropagation();setOutputFont(size);
+},true);
 function setTheme(theme){document.documentElement.dataset.theme=theme;storage.set('theme',theme);$('theme-label').textContent=theme==='dark'?'Light mode':'Dark mode';document.querySelector('[data-action="theme"] use').setAttribute('href',theme==='dark'?'#i-sun':'#i-moon');document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#1f2023':'#f5f5f5';}
 setTheme(storage.get('theme','dark'));
 function toast(text){$('toast').textContent=text;$('toast').hidden=false;clearTimeout(toast.timeout);toast.timeout=setTimeout(()=>$('toast').hidden=true,3500);}
@@ -152,7 +171,10 @@ $('input-form').onsubmit=async e=>{
   try{await api(`/api/runs/${activeRun}/input`,{value});}catch(error){toast(error.message);$('input-form').hidden=false;$('input-hint').hidden=false;}
 };
 $('stdin').onkeydown=async e=>{if(e.ctrlKey&&e.key.toLowerCase()==='d'){e.preventDefault();if(activeRun){await api(`/api/runs/${activeRun}/input`,{eof:true});$('input-form').hidden=true;$('input-hint').hidden=true;}}};
-$('terminal').addEventListener('click',()=>{if(!$('input-form').hidden)$('stdin').focus();});
+$('terminal').addEventListener('click',()=>{
+  if(!$('input-form').hidden)$('stdin').focus();
+  else $('terminal').focus({preventScroll:true});
+});
 $('clear-output').onclick=()=>{$('output').replaceChildren();outputText='';toast('Output cleared.');};
 function pauseTrace(){clearInterval(traceTimer);traceTimer=null;$('play-trace').querySelector('use').setAttribute('href','#i-play');$('play-trace').setAttribute('aria-label','Play visualization');}
 function makeValue(value){

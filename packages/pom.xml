@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.laxtline</groupId>
   <artifactId>local-code-compiler-windows</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <packaging>exe</packaging>
   <name>Local Code Compiler — Windows installer</name>
   <description>Windows coding app with bundled Python, local source-file autosave, Python visualization and HTML preview. Primary artifact: setup EXE. Attachments: portable EXE and Windows ZIP.</description>
   <url>https://github.com/laxtline/My-Code-Editor</url>
   <licenses><license><name>MIT (application source); third-party notices apply to bundled components</name><url>https://github.com/laxtline/My-Code-Editor/blob/main/THIRD_PARTY_NOTICES.md</url></license></licenses>
-  <scm><connection>scm:git:https://github.com/laxtline/My-Code-Editor.git</connection><url>https://github.com/laxtline/My-Code-Editor</url><tag>v1.1.0</tag></scm>
+  <scm><connection>scm:git:https://github.com/laxtline/My-Code-Editor.git</connection><url>https://github.com/laxtline/My-Code-Editor</url><tag>v1.2.0</tag></scm>
   <distributionManagement><repository><id>github</id><url>https://maven.pkg.github.com/laxtline/My-Code-Editor</url></repository></distributionManagement>
 </project>

@@ -24,7 +24,7 @@ def build():
         archive.write(ROOT/'INSTALL.txt','INSTALL.txt')
     setup=ROOT/'Local-Code-Compiler-Setup.exe'
     subprocess.run(common+['/out:'+str(setup),'/resource:'+str(payload)+',setup.zip',str(ROOT/'windows'/'Installer.cs')],check=True)
-    report={'installer':str(setup),'version':'1.1.0','size_mb':round(setup.stat().st_size/1048576,2),
+    report={'installer':str(setup),'version':'1.2.0','size_mb':round(setup.stat().st_size/1048576,2),
         'sha256':hashlib.sha256(setup.read_bytes()).hexdigest(),
         'default_install_folder':r'%LOCALAPPDATA%\Programs\LocalCodeCompiler',
         'includes':['Windows app','Python runtime','editor assets','Desktop and Start Menu shortcuts','Windows uninstall entry','uninstaller'],

@@ -26,6 +26,8 @@ The portable `Local-Code-Compiler.exe` opens the same app without setup. Keep it
 - Python **Visualize**: inspect up to 500 steps, variables, containers and function-call frames.
 - All 18 language choices switch in the same window and restore separate saved files.
 - Automatic local-file saving plus **Ctrl+S**.
+- Output-only text zoom: click Output and use **Ctrl+=**, **Ctrl+-**, or **Ctrl+0**. Its size is saved separately from the editor.
+- No word wrap in the editor or terminal: long lines scroll horizontally and explicit line breaks are preserved.
 - HTML/CSS/JavaScript live preview in a sandboxed iframe.
 - SQLite query execution and JavaScript/TypeScript execution with installed Node.js.
 - Dark/light themes, adjustable text, resizable panes, ZIP download, source-file import and local code-sharing links.
@@ -56,7 +58,7 @@ Each language saves to `workspace/`, for example `main.py`, `main.js`, `main.sql
 | `Local-Code-Compiler-Windows-x64.zip` | Both EXEs, guide and notices |
 | `SHA256SUMS.txt` | Release download checksums |
 
-GitHub Maven package: **`com.github.laxtline:local-code-compiler-windows:1.1.0`**. Its primary artifact is the setup EXE; portable EXE and ZIP attachments are included. The package workflow publishes the same verified release assets. Most users should download the installer directly from Releases.
+GitHub Maven package: **`com.github.laxtline:local-code-compiler-windows:1.2.0`**. Its primary artifact is the setup EXE; portable EXE and ZIP attachments are included. The package workflow publishes the same verified release assets. Most users should download the installer directly from Releases.
 
 ## Build on Windows
 
