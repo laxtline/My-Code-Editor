@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+data/
+workspace/
+.desktop-runtime/
+build/
+release/
+reference/
+frontend-deps/node_modules/
+*.log
+*.exe
+*.zip
+*.sha256
+*.user
+.DS_Store
+Thumbs.db

@@ -1,0 +1,41 @@
+name: Check source
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check Python and JavaScript source
+        run: |
+          python -m compileall -q server.py worker.py polyglot_worker.py languages.py launch.py build_exe.py build_installer.py test_server.py test_installer.py
+          node --check static/app.js
+      - name: Run execution and local-file integration checks
+        shell: pwsh
+        run: |
+          $server = Start-Process python -ArgumentList 'server.py' -WindowStyle Hidden -PassThru
+          try {
+            $ready = $false
+            for ($attempt = 0; $attempt -lt 40; $attempt++) {
+              try {
+                $health = Invoke-RestMethod http://127.0.0.1:8000/api/health
+                if ($health.app -eq 'programiz-local') { $ready = $true; break }
+              } catch { Start-Sleep -Milliseconds 250 }
+            }
+            if (-not $ready) { throw 'The local server did not start.' }
+            python test_server.py
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          } finally {
+            if (-not $server.HasExited) { Stop-Process -Id $server.Id }
+          }

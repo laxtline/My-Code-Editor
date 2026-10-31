@@ -1,63 +1,86 @@
-# My Code Editor
+# Local Code Compiler
 
-A modern, lightweight, and responsive web-based code editor that allows users to write, edit, and preview code in a clean interface.
+A local code editor and native Windows app with real Python execution, interactive input, code visualization, source-file autosaving and HTML live preview.
+
+**[Download Windows installer](https://github.com/laxtline/My-Code-Editor/releases/latest/download/Local-Code-Compiler-Setup.exe)** · **[All downloads](https://github.com/laxtline/My-Code-Editor/releases/latest)** · **[GitHub Packages](https://github.com/laxtline/My-Code-Editor/packages)**
+
+![Local Code Compiler Windows app](docs/windows-app.png)
+
+## Install on Windows
+
+1. Download `Local-Code-Compiler-Setup.exe` from [Releases](https://github.com/laxtline/My-Code-Editor/releases/latest).
+2. Open it, choose the installation folder, and click **Install**.
+3. Start **Local Code Compiler** from the Desktop or Start Menu.
+
+The default installation folder is `%LOCALAPPDATA%\Programs\LocalCodeCompiler`. Setup includes Python 3.14.10, the native window, frontend assets and execution workers, and adds Windows uninstall integration. No administrator access is required for the default per-user install.
+
+Your source files are saved in the installed app's `workspace` folder. Updates preserve existing files. Uninstall retains your saved code and app data. Setup can import code from a `workspace` folder beside the installer without overwriting installed source files.
+
+The portable `Local-Code-Compiler.exe` opens the same app without setup. Keep it in a writable folder; the first launch extracts its bundled files beside the EXE. Windows x64, Microsoft .NET Framework 4.7.2+ and Microsoft Edge WebView2 are required.
 
 ## Features
 
-- Clean and Modern UI
-- Live Code Editing
-- Responsive Design
-- HTML, CSS, and JavaScript Support
-- Node.js Backend
-- Easy to Customize
-- Fast Performance
-- Beginner-Friendly Code Structure
+- Full-height code/output workspace without a promotional header.
+- Syntax highlighting, indentation, line numbers, bracket matching, undo/redo and comments.
+- Real Python execution with streaming output, `input()`, exceptions, Stop and EOF.
+- Python **Visualize**: inspect up to 500 steps, variables, containers and function-call frames.
+- All 18 language choices switch in the same window and restore separate saved files.
+- Automatic local-file saving plus **Ctrl+S**.
+- HTML/CSS/JavaScript live preview in a sandboxed iframe.
+- SQLite query execution and JavaScript/TypeScript execution with installed Node.js.
+- Dark/light themes, adjustable text, resizable panes, ZIP download, source-file import and local code-sharing links.
+- F11 full screen and clean shutdown of the app's owned backend.
 
-## Technologies Used
+Python, SQLite and HTML preview are included. JavaScript/TypeScript require Node.js. R, Java, Kotlin, C, C++, C#, Go, Rust, Scala, Dart, Ruby, PHP and Swift have local adapters: install the matching compiler/interpreter on PATH to run them. Editing, saving and downloading still work when a runtime is missing.
 
-- HTML5
-- CSS3
-- JavaScript (ES6)
-- Node.js
+## Run from source
 
-## Project Structure
+Python 3.10+ is required. There are no pip dependencies or frontend build steps; browser assets are included.
 
-```
-my-code-editor/
-│
-├── index.html
-├── server.js
-├── assets/
-├── README.md
-└── LICENSE
+```powershell
+git clone https://github.com/laxtline/My-Code-Editor.git
+cd My-Code-Editor
+python server.py
 ```
 
-## Getting Started
+Open `http://127.0.0.1:8000`. On Windows, `start.cmd` launches the browser version and `stop.cmd` stops it. The native app uses its own loopback server on port 8123 while its window is open.
 
-1. Clone the repository
+Each language saves to `workspace/`, for example `main.py`, `main.js`, `main.sql` and `index.html`. User source files, `data/`, logs and caches are excluded from Git. Shared links work on the same computer while the matching server is available.
 
-```bash
-git clone https://github.com/your-username/my-code-editor.git
+## Downloads and packages
+
+| File | Purpose |
+| --- | --- |
+| `Local-Code-Compiler-Setup.exe` | Recommended installer |
+| `Local-Code-Compiler.exe` | Portable Windows app |
+| `Local-Code-Compiler-Windows-x64.zip` | Both EXEs, guide and notices |
+| `SHA256SUMS.txt` | Release download checksums |
+
+GitHub Maven package: **`com.github.laxtline:local-code-compiler-windows:1.1.0`**. Its primary artifact is the setup EXE; portable EXE and ZIP attachments are included. The package workflow publishes the same verified release assets. Most users should download the installer directly from Releases.
+
+## Build on Windows
+
+Supply an embedded Python distribution and the WebView2 SDK DLLs:
+
+```powershell
+python build_exe.py --runtime C:\dependencies\python-embed --webview C:\dependencies\webview2
+python build_installer.py
 ```
 
-2. Install dependencies (if applicable)
+The WebView2 folder must contain `Microsoft.Web.WebView2.Core.dll`, `Microsoft.Web.WebView2.WinForms.dll` and x64 `WebView2Loader.dll`. The .NET Framework C# compiler builds the native EXEs. See [dependency versions and official downloads](windows/dependencies.json). The setup never embeds personal source files or databases.
 
-```bash
-npm install
-```
+To refresh public visual assets and the vendored editor, run `npm ci --prefix frontend-deps`, then `python setup_assets.py`. Normal local use does not require network access.
 
-3. Start the server
+## Verification and limits
 
-```bash
-node server.js
-```
+Run `python test_server.py` with the local server running. Nine integration checks cover Python/JS/TS/SQL execution, Unicode, input/EOF, errors, Stop/timeout/output limits, traces, local saving, sharing, ZIP downloads and request-origin checks. Set `LOCAL_COMPILER_TEST_URL` for another local port.
 
-4. Open your browser and visit:
+After building Setup, run `python test_installer.py` to verify extraction, bundled execution, source import, upgrade preservation and uninstall preservation in an isolated build folder. Native execution and close/reopen behavior were also checked.
 
-```
-http://localhost:3000
-```
+This is a personal local tool. Programs run under your Windows account and can access local files and networks; the execution directory is not a security sandbox. The server binds to loopback and validates Host/Origin and request headers.
 
-## License
+Limits: four simultaneous runs, 20 seconds of execution, 1 MB output and 10 minutes of waiting for Python input. SQL uses a fresh in-memory database and shows up to 1000 rows. TypeScript uses Node's native type stripping; syntax requiring transpilation needs an additional compiler.
 
-MIT License
+## License and credits
+
+Application source is [MIT licensed](LICENSE). Third-party components and visual assets retain their own rights; see [notices](THIRD_PARTY_NOTICES.md). This independent local recreation is inspired by Programiz's interface and is not affiliated with Programiz. The previous editor remains available in Git history.
